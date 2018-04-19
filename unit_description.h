@@ -2,6 +2,7 @@
 #define UNIT_H
 
 #include <vector>
+#include <cstdio>
 
 namespace Unit {
 	enum ClassOfUnit {
@@ -46,22 +47,22 @@ namespace Unit {
 
 	class Army : public BaseUnit {
 		protected:
-			size_t army_size;
+			std::size_t army_size;
 			long long army_hp;
 			long long damage;
 		public:
 			Army() = delete;
-			Army(long long hp, long long _damage, size_t sizeOfArmy, ClassOfUnit unit_class):
+			Army(long long hp, long long _damage, std::size_t sizeOfArmy, ClassOfUnit unit_class):
 				BaseUnit(hp * sizeOfArmy, _damage * sizeOfArmy, unit_class),
 				army_size(sizeOfArmy), army_hp(hp), damage(_damage) {}
-			std::vector<BaseUnit*> unpick() const {
-				std::vector<BaseUnit*> units(army_size);
-				long long unit_hp = hp / army_size;
-				for (size_t i = 0; i < army_size - 1; ++i)
-					units.push_back(new BaseUnit(unit_hp, damage, cl));
-				unit_hp += hp - unit_hp * army_size;
-				units.push_back(new BaseUnit(unit_hp, damage, cl));
-				return units;
+			void unpick() {
+				if (this->army_size >= 1)
+					this->army_size -= 1;
+				else
+					this->army_size = 0;
+			}
+			size_t get_size() const {
+				return army_size;
 			}
 	};
 
@@ -69,18 +70,18 @@ namespace Unit {
 		public:
 			static BaseUnit* create_unit(ClassOfUnit unit_class) {
 				BaseUnit* unit = NULL;
-				if(unit_class == ClassOfUnit::SPACESHIP)
-					unit = new BaseUnit(200, 15, ClassOfUnit::SPACESHIP);
-				else if (unit_class == ClassOfUnit::WARRIOR)
-					unit = new BaseUnit(100, 5, ClassOfUnit::WARRIOR);
+				if(unit_class == SPACESHIP)
+					unit = new BaseUnit(200, 15, SPACESHIP);
+				else if (unit_class == WARRIOR)
+					unit = new BaseUnit(100, 5, WARRIOR);
 				return unit;
 			}
-			static Army* create_army(ClassOfUnit unit_class, size_t sizeOfArmy) {
+			static Army* create_army(ClassOfUnit unit_class, std::size_t sizeOfArmy) {
 				Army* army = NULL;
-				if (unit_class == ClassOfUnit::SPACESHIP)
-					army = new Army(200, 15, sizeOfArmy, ClassOfUnit::SPACESHIP);
-				else if (unit_class == ClassOfUnit::WARRIOR)
-					army = new Army(100, 5, sizeOfArmy, ClassOfUnit::WARRIOR);
+				if (unit_class == SPACESHIP)
+					army = new Army(200, 15, sizeOfArmy, SPACESHIP);
+				else if (unit_class == WARRIOR)
+					army = new Army(100, 5, sizeOfArmy, WARRIOR);
 				return army;
 			}
 	};
