@@ -15,7 +15,7 @@ class View
 		SDL_DisplayMode m_display_mode;
 		SDL_Window* m_window;
 		SDL_Renderer* m_renderer;
-		Field::Field* m_field;
+		Field::CField* m_field;
 		Unit::ClassOfUnit m_active_type;
 		Field::element m_next_iter;
 		bool m_active_side;

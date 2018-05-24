@@ -10,12 +10,12 @@ void View::init()
 	if(m_window == NULL) 
 		throw new WindowCreationFailed(std::string(SDL_GetError())); 
 	m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	m_field = new Field::Field(INIT_WINDOW_HEIGHT / Representation::cell, INIT_WINDOW_WIDTH / Representation::cell);
+	m_field = new Field::CField(INIT_WINDOW_HEIGHT / Appearance::cell, INIT_WINDOW_WIDTH / Appearance::cell);
 	m_active_type = Unit::WARRIOR;
 	m_active_type_rect.x = 0;
 	m_active_type_rect.y = 0;
-	m_active_type_rect.h = Representation::cell;
-	m_active_type_rect.w = Representation::cell;
+	m_active_type_rect.h = Appearance::cell;
+	m_active_type_rect.w = Appearance::cell;
 	m_active_side = false;
 
 	_process_events();

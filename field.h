@@ -1,5 +1,5 @@
-#ifndef FIELD_H
-#define FIELD_H
+#ifndef CField_H
+#define CField_H
 #include <vector>
 #include <iterator>
 #include <SDL2/SDL_rect.h>
@@ -10,7 +10,7 @@
 namespace Field 
 {
 	typedef std::vector<Appearance::Appearance*>::iterator element;
-	class Field 
+	class CField 
 	{
 		private:
 			std::vector<std::vector<Logic::LogicObject*> > m_field;
@@ -18,8 +18,8 @@ namespace Field
 			element m_next_element;
 			Logic::CaptainLogic* m_logic;
 		public:
-			Field(size_t vsize, size_t hsize);
-			~Field();
+			CField(size_t vsize, size_t hsize);
+			~CField();
 			bool get_next(element* next);
 			void renew();
 			void add_element(Appearance::Appearance* appearance);
