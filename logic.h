@@ -43,14 +43,14 @@ namespace Logic
 		public:
 			Shot();
 			SDL_Rect* rect();
-			void set_appearance(Appearance::Appearance* repr) { /*TODO*/ }
-			void set_target(CUnit* target) { /* TODO */ }
-			CUnit* get_target() { /* TODO */ }
-			Appearance::s_point get_position() const { /* TODO */ }
-			void set_position(int x, int y) { /* TODO */ }
-			Unit::ClassOfUnit type() const { /* TODO */ }
-			bool side() const { /* TODO */ }
-			void decrease_hp(CUnit* enemy) { /* TODO */ }
+			void set_appearance(Appearance::Appearance* repr) { /*in progress*/ }
+			void set_target(CUnit* target) { /*in progress*/ }
+			CUnit* get_target() { /*in progress*/ }
+			Appearance::s_point get_position() const { /*in progress*/ }
+			void set_position(int x, int y) { /*in progress*/ }
+			Unit::ClassOfUnit type() const { /*in progress*/ }
+			bool side() const { /*in progress*/ }
+			void decrease_hp(CUnit* enemy) { /*in progress*/ }
 	};
 
 	class CUnit : public LogicObject 
@@ -69,7 +69,7 @@ namespace Logic
 			Unit::ClassOfUnit type() const;
 			void decrease_hp(CUnit* enemy);
 			bool side() const;
-			void set_appearance(Appearance::Appearance* repr) { /*TODO*/ } 
+			void set_appearance(Appearance::Appearance* repr) { /*in progress*/ } 
 	};
 
 	class UnitLogic 

@@ -41,7 +41,7 @@ void WarriorLogic::process_enemy(CUnit* cur_unit, CUnit* enemy, std::vector<std:
 		(*field)[position.x][position.y]->decrease_hp(cur_unit);
 	else 
 	{
-		//TODO: shot in the cell
+		//in progress(shot in the cell)
 	}
 }
 
