@@ -89,9 +89,9 @@ namespace Logic
 	class CaptainLogic 
 	{
 		private:
-			std::vector<std::vector<CUnit*> > m_ateam;	//side = false
-			std::vector<std::vector<CUnit*> > m_bteam;	//side = true
-			std::vector<Shot*> m_bullets;
+			std::vector<std::vector<CUnit*> > m_ateam;
+			std::vector<std::vector<CUnit*> > m_bteam;
+			std::vector<Shot*> m_shots;
 			std::vector<std::vector<LogicObject*> >* m_field;
 			void _update_units(std::vector<std::vector<CUnit*> >& allies, std::vector<std::vector<CUnit*> >& enemies,
 					   Unit::ClassOfUnit type, UnitLogic* ulogic);
