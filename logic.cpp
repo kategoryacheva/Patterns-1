@@ -107,7 +107,7 @@ CaptainLogic::CaptainLogic(std::vector<std::vector<LogicObject*> >* field)
 void CaptainLogic::add_unit(Appearance::UnitAppearance* repr) 
 {
 	if(repr->type() > 2)
-		throw new ExInvalidUnit("unit class is greater than 2");
+		throw new InvalidUnit("unit class is greater than 2");
 	CUnit* unit = new CUnit(Unit::Creator::create_unit(repr->type()), repr);
 	if(!unit->side()) 
 		m_ateam[repr->type()].push_back(unit);

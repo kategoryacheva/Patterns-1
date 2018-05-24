@@ -68,7 +68,7 @@ bool Field::element_exists(int x, int y) const
 
 void Field::activate_logic() 
 {
-	m_logic = new Logic::GeneralLogic(&m_field);
+	m_logic = new Logic::CaptainLogic(&m_field);
 	for(size_t i = 0; i < m_elements.size(); ++i)
 		m_logic->add_unit(dynamic_cast<Appearance::UnitAppearance*>(m_elements[i]));
 }

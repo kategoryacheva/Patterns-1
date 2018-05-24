@@ -4,11 +4,11 @@
 void View::init() 
 {
 	if(SDL_Init(SDL_INIT_VIDEO) != 0) 
-		throw new ExInitFailed(std::string(SDL_GetError()));
+		throw new InitFailed(std::string(SDL_GetError()));
 	int request = SDL_GetDesktopDisplayMode(0, &m_display_mode);
 	m_window = SDL_CreateWindow("SimpleGame", 0, 0, INIT_WINDOW_WIDTH, INIT_WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
 	if(m_window == NULL) 
-		throw new ExWindowCreationFailed(std::string(SDL_GetError())); 
+		throw new WindowCreationFailed(std::string(SDL_GetError())); 
 	m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	m_field = new Field::Field(INIT_WINDOW_HEIGHT / Representation::cell, INIT_WINDOW_WIDTH / Representation::cell);
 	m_active_type = Unit::WARRIOR;
