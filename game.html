@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8"/>
+	<title>Game</title>
+	<style>
+		canvas { background: #eee; display: none; margin: 0 auto; }
+		input { font-size: 300%; background: #eee }
+	</style>
+</head>
+
+<body>
+	<div align="center">
+		<input id="Easy" value="Easy" type="button">
+	</div>
+	<div align="center">
+		<input id="Hard" value="Hard" type="button">
+	</div>
+	<canvas id="canvas"></canvas>
+
+<script>
+	var $ = document.querySelector.bind(document);
+
+	var canvas = $("#canvas");
+	canvas.width = "480";
+	canvas.height = "320";
+	var ctx = canvas.getContext("2d");
+	var ballRadius = 10;
+	var x = canvas.width/2;
+	var y = canvas.height-30;
+	var dx = 2;
+	var dy = -2;
+	var paddleHeight = 10;
+	var paddleWidth = 75;
+	var paddleX = (canvas.width-paddleWidth)/2;
+	var rightPressed = false;
+	var leftPressed = false;
+	var brickRowCount = 5;
+	var brickColumnCount = 3;
+	var brickWidth = 75;
+	var brickHeight = 20;
+	var brickPadding = 10;
+	var brickOffsetTop = 30;
+	var brickOffsetLeft = 30;
+	var score = 0;
+	var lives = 3;
+
+	var Ball = function(x, y, ballRadius) {this.x = x; this.y = y; this.ballSize = ballRadius };
+	Ball.prototype = {
+		constructor: Ball,
+		drawBall: function() {
+			ctx.beginPath();
+			ctx.arc(this.x, this.y, this.ballSize, 0, Math.PI*2);
+			ctx.fillStyle = "blue";
+			ctx.fill();
+			ctx.closePath();
+		},
+		getX: function() {
+			return this.x;
+		},
+		getY: function() {
+			return this.y;
+		},
+		getSize: function() {
+			return this.ballSize;
+		}
+	}
+	Ball.prototype.setX = function(x) {
+		this.x = x;
+	}
+	Ball.prototype.setY = function(y) {
+		this.y = y;
+	}
+	var BigBall = function(ball) {
+		this.ball = ball;
+		this.ball.ballSize *= 1.5;
+		this.color = "magenta";
+		this.count = 0;
+	}
+	BigBall.prototype = {
+		constructor: BigBall,
+		drawBall: function() {
+			ctx.beginPath();
+			ctx.arc(this.ball.x, this.ball.y, this.ball.ballSize, 0, Math.PI*2);
+			ctx.fillStyle = this.color;
+			this.count++;
+			if (this.color == "magenta" && this.count == 5) {
+				this.color = "purple";
+				this.count = 0;
+			}
+			else if (this.color == "purple" && this.count == 5) {
+				this.color = "magenta";
+				this.count = 0;
+			}
+			ctx.fill();
+			ctx.closePath();
+		},
+		getX: function() { return this.ball.getX(); },
+		getY: function() { return this.ball.getY(); },
+		getSize: function() { return this.ball.getSize(); }	
+	}
+	BigBall.prototype.setX = function(x) {
+		this.ball.x = x;
+	}
+	BigBall.prototype.setY = function(y) {
+		this.ball.y = y;
+	}
+	var ball;
+	var easyBall = new Ball(x, y, ballRadius);
+	var Brick = function(state) { this.x = 0; this.y = 0; this.state = state };
+	Brick.prototype.changeState = function(state) {
+		this.state = state;
+	}
+	function BricksFactory(brickRowCount, brickColumnCount) {
+		this.rows = brickRowCount;
+		this.columns = brickColumnCount;
+	}
+	BricksFactory.prototype.createBricks = function (ind) {
+		var bricks = [];
+		for(var i = 0; i < this.columns; i++) {
+	  		bricks[i] = [];
+	  		for(var j = 0; j < this.rows; j++) {
+				var state = 1;
+				if (ind)
+	   				state += (Math.random() > 0.5);
+	   			bricks[i][j] = new Brick(state);
+	 		}
+		}
+		return bricks;
+	}
+	var factory = new BricksFactory(brickRowCount, brickColumnCount);
+	var bricks;
+	$("#Hard").addEventListener("click", function() {this.style.display='none';
+							 $("#Easy").style.display='none';
+							 ball = easyBall;
+							 bricks = factory.createBricks(1);
+							 draw()});
+	$("#Easy").addEventListener("click", function() {this.style.display='none';
+							 $("#Hard").style.display='none';
+							 ball = new BigBall(easyBall);
+							 bricks = factory.createBricks(0);
+							 draw()});
+
+	function drawBricks() {
+	   	for(var i = 0; i < brickColumnCount; i++) {
+			for(var j = 0; j < brickRowCount; j++) {			
+	  			if(bricks[i][j].state >= 1) {
+	        			var brickX = (j * (brickWidth + brickPadding)) + brickOffsetLeft;
+	       				var brickY = (i * (brickHeight + brickPadding)) + brickOffsetTop;
+	        			bricks[i][j].x = brickX;
+	        			bricks[i][j].y = brickY;
+	        			ctx.beginPath();
+	        			ctx.rect(brickX, brickY, brickWidth, brickHeight);
+					if (bricks[i][j].state == 1)
+	        				ctx.fillStyle = "grey";
+					if (bricks[i][j].state == 2)
+						ctx.fillStyle = "brown";
+	        			ctx.fill();
+	        			ctx.closePath();
+	      			}
+	   		} 
+	   	}
+	}
+
+	document.addEventListener("keydown", keyDownHandler, false);
+	document.addEventListener("keyup", keyUpHandler, false);
+	document.addEventListener("mousemove", mouseMoveHandler, false);
+	
+	function keyDownHandler(e) {
+		if(e.keyCode == 39) {
+	    		rightPressed = true;
+	  	}
+	  	else if(e.keyCode == 37) {
+	    		leftPressed = true;
+	  	}
+	}
+
+	function keyUpHandler(e) {
+		if(e.keyCode == 39) {
+	    		rightPressed = false;
+	  	}
+	  	else if(e.keyCode == 37) {
+	    		leftPressed = false;
+	  	}
+	}
+
+	function mouseMoveHandler(e) {
+		var relativeX = e.clientX - canvas.offsetLeft;
+	  	if(relativeX > 0 && relativeX < canvas.width) {
+	    		paddleX = relativeX - paddleWidth/2;
+	  	}
+	}
+
+	function collisionDetection() {
+		for(var i = 0; i < brickColumnCount; i++) {
+	    		for(var j = 0; j < brickRowCount; j++) {
+	      			var b = bricks[i][j];
+	      			if(b.state > 0) {
+	        			if(ball.getX() + ball.getSize() >= b.x && ball.getX() - ball.getSize() <= b.x + brickWidth && ball.getY() + ball.getSize() >= b.y && ball.getY() - ball.getSize() <= b.y + brickHeight) {
+	         				dy = -dy;
+		  				if (b.state == 2)
+	          					b.changeState(1);
+		  				else {
+							b.changeState(0);
+	          					score++;
+						}
+						
+	          				if(score == brickRowCount*brickColumnCount) {
+	            					alert("YOU WIN!");
+	            					document.location.reload();
+	          				}
+	        			}
+	      			}
+	    		}
+	  	}
+	}
+
+	function drawPaddle() {
+		ctx.beginPath();
+		ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
+		ctx.fillStyle = "black";
+		ctx.fill();
+		ctx.closePath();
+	}
+
+	function drawScore() {
+		ctx.font = "16px Arial";
+		ctx.fillStyle = "blue";
+		ctx.fillText("Score: "+score, 8, 20);
+	}
+	function drawLives() {
+		ctx.font = "16px Arial";
+		ctx.fillStyle = "blue";
+		ctx.fillText("Lives: "+lives, canvas.width-65, 20);
+	}
+	
+	function draw() {
+		canvas.style.display = "block";
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+	  
+	  	drawBricks();
+	  	ball.drawBall();
+	  	drawPaddle();
+	  	drawScore();
+	  	drawLives();
+	  	collisionDetection(ball);
+		if(ball.getX() + dx > canvas.width - ball.getSize() || ball.getX() + dx < ball.getSize()) {
+	    		dx = -dx;
+	  	}
+	  	if(ball.getY() + dy < ball.getSize()) {
+	    		dy = -dy;
+	  	}
+	  	else if(ball.getY() + dy > canvas.height - ball.getSize()) {
+	    		if(ball.getX() > paddleX && ball.getX() < paddleX + paddleWidth) {
+	      			dy = -dy;
+	    		}
+	    		else {
+	      			lives--;
+	      			if(!lives) {
+	        			alert("GAME OVER");
+	        			document.location.reload();
+	      			}
+	      			else {
+	        			ball.setX(canvas.width / 2);
+	        			ball.setY(canvas.height - 30);
+	        			dx = 3;
+	        			dy = -3;
+	        			paddleX = (canvas.width-paddleWidth)/2;
+	      			}
+			}
+		}
+	
+		if(rightPressed && paddleX < canvas.width - paddleWidth) {
+			paddleX += 7;
+		}
+		else if(leftPressed && paddleX > 0) {
+			paddleX -= 7;
+		}
+	
+		ball.setX(ball.getX() + dx);
+		ball.setY(ball.getY() + dy);
+		requestAnimationFrame(draw);
+	}
+</script>
+
+</body>
+</html>
